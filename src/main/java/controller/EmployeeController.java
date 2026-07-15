@@ -21,7 +21,7 @@
 //        return repository.save(employee);
 //
 //    }
-//
+// 
 //    // Get All Employees
 //    @GetMapping("/getAll")
 //    public List<Employee> getAllEmployees() {
@@ -64,12 +64,17 @@
 package controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import entity.Employee;
 import jakarta.validation.Valid;
 import service.EmployeeService;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -83,12 +88,37 @@ public class EmployeeController {
 //		return service.saveEmployee(employee);
 //	}
 //	
+//	@PostMapping("/save")
+//	public Employee saveEmployee(@Valid @RequestBody Employee employee)
+//	{
+//		return service.saveEmployee(employee);
+//	}
 	@PostMapping("/save")
-	public Employee saveEmployee(@Valid @RequestBody Employee employee)
-	{
-		return service.saveEmployee(employee);
+	public ResponseEntity<Employee> saveEmployee(
+	        @Valid @RequestBody Employee employee){
+
+	    Employee savedEmployee = service.saveEmployee(employee);
+
+	    return new ResponseEntity<>(savedEmployee,
+	            HttpStatus.CREATED);
+
 	}
 	
+	@GetMapping("/getById/{id}")
+	public ResponseEntity<Employee> getEmployee(
+	@PathVariable int id){
+
+	Employee employee = service.getEmployeeById(id);
+
+	if(employee!=null){
+
+	return ResponseEntity.ok(employee);
+
+	}
+
+	return ResponseEntity.notFound().build();
+
+	}
 	
 	
 	
